@@ -1,30 +1,23 @@
 # Image in Terminal.js
 
-Transform any image into stunning colorized ASCII art that renders directly in your terminal. Each pixel's brightness is mapped to an ASCII character, and the original colors are preserved using ANSI 24-bit RGB colors—creating a beautiful, textual representation of your image without any GUI.
+Transform any image into stunning terminal art using different rendering techniques. Each pixel's brightness and colors are intelligently preserved and rendered directly in your terminal using ANSI colors and various character sets.
 
 ## Screenshots
 
 ### Original Image
 ![Original Image](image.jpeg)
 
-### Terminal Output
-The image is converted into ASCII characters with each character colored to match the original image's hue and brightness:
-
-```
-oaoao*#*ooooaoooao**M*#M#M#MMMM#M#MM#M#MM#MMM##MM#MM#MWM#W*m[(i++++~i+++++++++!lI!ilI;::;l!lI:;i~i~i)(QbMWbkhkBhkhhBhBhah**o*#WWbWBaoa
-aoaoao##*oooaooooo**#*M#M#M##MM#MM#MM#MMMMM#M#MMM#MMMWM#WW#mo)_i++++i++++!+++lII:;;Il!l::;l:;;;;I;I~!!~~)(Qpbobkhkahao*#MWMbWah
-aoaao*##*oaoooaooo**##M#M#MMMMM#M#MMMMMMM#MMMMM#MMMWWWM#Wm{)_++i+++++++++lI!;:;I!;::;;;;;:;I;~:;!~~))(OmpbdbkhaBao*MMWWa
-```
-(displayed with full RGB colors in your terminal)
+### Terminal Output (ASCII Art)
+![Terminal Output](output.png)
 
 ## Features
 
-- **Multi-format Support** - Load PNG, JPEG, BMP, GIF and other image formats
-- **Smart Resizing** - Automatically maintains aspect ratio while compressing to your desired width
-- **Brightness-to-Character Mapping** - Maps pixel brightness to ASCII characters (` ` to `@`)
-- **Full Color Preservation** - Uses 24-bit ANSI colors to recreate the original image's hues
-- **Terminal Native** - No GUI required, runs entirely in your terminal
-- **Customizable Output** - Adjust width to fit any terminal size
+- **Multi-format Image Support** - Loads PNG, JPEG, BMP, GIF and other image formats using Jimp
+- **Intelligent Image Resizing** - Automatically maintains aspect ratio while compressing to your desired width
+- **Full Color Preservation** - Uses 24-bit ANSI colors to recreate the original image's vibrant hues
+- **Terminal Native** - No GUI required, runs entirely in your terminal with pure text output
+- **Customizable Output Width** - Adjust width to fit any terminal size (80, 100, 120, 150+ characters)
+- **Multiple Rendering Methods** - Choose from ASCII art, braille patterns, or half-block rendering
 
 ## Installation
 
@@ -37,45 +30,80 @@ npm install
 
 ## Usage
 
-### Basic usage:
+### Rendering Methods
+
+**index2.js - ASCII Art (Recommended)**
+ASCII characters mapped to pixel brightness with full color support.
 ```bash
 node index2.js image.jpg
+node index2.js image.jpg --width 120
+node index2.js photo.png -w 80
 ```
 
-### Custom width:
+**index3.js - Braille Characters**
+Uses Unicode braille patterns for finer detail and higher pixel density.
 ```bash
-node index2.js image.jpg --width 100
-node index2.js image.jpg -w 80
+node index3.js image.jpg
+node index3.js image.jpg --width 100
 ```
 
-### Examples:
+**index1.js - Half-Block Rendering**
+Uses half-block characters (▄) with background and foreground colors for direct pixel-level control.
 ```bash
-node index2.js photo.png -w 80      # For narrow terminals
-node index2.js photo.png -w 150     # For wide terminals
+node index1.js image.jpg
+node index1.js image.jpg --width 100
 ```
 
-## How It Works
+### Options
 
-1. **Load Image** - Reads image file using Jimp
-2. **Resize** - Compresses to specified width, adjusts height for terminal character ratio (taller than wide)
-3. **Convert Pixels** - For each pixel:
-   - Extract RGB color values
-   - Calculate brightness to determine which ASCII character to use
-   - Map brightness across gradient: ` .'` ,:;Il!i~+_-?][}{1)(|/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$`
-4. **Apply Colors** - Use original RGB values with ANSI 24-bit color codes
-5. **Display** - Print colored ASCII art to terminal
+- `--width` or `-w`: Set output width in characters (default varies by method)
+- Image path: Path to your image file
+
+### Examples
+
+```bash
+# Try different rendering methods on the same image
+node index2.js photo.png -w 100    # ASCII art
+node index3.js photo.png -w 100    # Braille
+node index1.js photo.png -w 100    # Half-blocks
+
+# Adjust for your terminal width
+node index2.js landscape.jpg -w 80  # Narrow terminal
+node index2.js landscape.jpg -w 150 # Wide terminal
+```
+
+## Rendering Methods Explained
+
+### index2.js - ASCII Art
+Maps pixel brightness to ASCII characters (` ` to `@`) with full RGB color for each character. Best for artistic effect and color accuracy.
+- Gradient: ` .'` ,:;Il!i~+_-?][}{1)(|/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$`
+- Resolution: Depends on width setting
+- Color Support: Full 24-bit ANSI colors
+
+### index3.js - Braille Characters
+Uses Unicode braille patterns (⠀ ⠁ ⠂ ... ⠿) for higher pixel density. Each braille character represents a 2×4 pixel grid.
+- Resolution: Double horizontal, double vertical compared to ASCII
+- Color Support: Limited (black and white)
+- Best for: High-detail monochrome rendering
+
+### index1.js - Half-Block Rendering
+Uses Unicode half-block character (▄) with separate background and foreground colors. Shows two pixels per character (stacked vertically).
+- Resolution: One character = 2 vertical pixels
+- Color Support: Full 24-bit ANSI colors
+- Best for: Smooth color gradients and subtle details
 
 ## Files
 
-- `index2.js` - Main program (recommended)
-- `index1.js` - Alternative implementation
-- `index3.js` - Alternative implementation
-- `image.jpeg` - Sample image
-- `terminal_output_sample.txt` - Example terminal output (run with 120 width)
+- `index2.js` - ASCII art rendering (recommended)
+- `index3.js` - Braille character rendering
+- `index1.js` - Half-block rendering
+- `image.jpeg` - Sample image for testing
+- `output.png` - Example terminal output
+- `package.json` - Project configuration
 
 ## Requirements
 
-- Terminal with 24-bit ANSI color support (iTerm2, Kitty, Windows Terminal, most modern terminals)
+- Terminal with 24-bit ANSI color support (iTerm2, Kitty, Windows Terminal, VS Code terminal)
 - Node.js v14 or later
 
 ## Troubleshooting
@@ -89,22 +117,37 @@ node index2.js photo.png -w 150     # For wide terminals
 **Module error?**
 - Run `npm install` to install Jimp dependency
 
-**Output looks stretched?**
-- Adjust the width parameter: `node index2.js image.jpg -w 100`
+**Output looks stretched or squished?**
+- Adjust the width parameter: `node index2.js image.jpg -w 100` or try a different width
+
+**Braille characters not rendering?**
+- Your terminal may not support Unicode braille. Try a different rendering method.
 
 ## Customization
 
-**Change character gradient** in `index2.js`:
+### ASCII Art (index2.js)
+
+**Change character gradient**:
 ```javascript
 const GRADIENT =
     " .'`^,:;Il!i~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$";
 ```
 
-**Change default width** in `parseArgs()`:
+**Change default width**:
 ```javascript
 const options = { image: null, width: 120 };  // Change 120 to your preferred default
 ```
 
 ## Dependencies
 
-- **Jimp** - Pure JavaScript image manipulation library (no native dependencies required)
+- **Jimp** - Pure JavaScript image manipulation library
+
+## Comparison
+
+| Feature | ASCII | Braille | Half-Block |
+|---------|-------|---------|-----------|
+| Color Support | ✅ Full 24-bit | ❌ B&W | ✅ Full 24-bit |
+| Resolution | Medium | High | Medium |
+| Character Density | 1 char/pixel | 4 pixels/char | 2 vertical pixels/char |
+| Artistic Effect | High | Low | High |
+| Recommended For | Photos, art | Fine details | Smooth gradients |
